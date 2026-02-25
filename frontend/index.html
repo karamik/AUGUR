@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUGUR — Acquisition Opportunity | AI Governance Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --darker: #020617;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--darker);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-text-cyan {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .glow {
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+        }
+        
+        .glow-cyan {
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+        }
+        
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+        
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .nav-blur {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        
+        .investor-badge {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <canvas id="particles"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 nav-blur border-b border-white/10 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 group cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center transform group-hover:rotate-12 transition-transform">
+                        <i data-lucide="eye" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-2xl font-bold font-display tracking-tight">AUGUR</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#opportunity" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Opportunity</a>
+                    <a href="#technology" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Technology</a>
+                    <a href="#market" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Market</a>
+                    <a href="#exit" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Exit Strategy</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <span class="hidden md:block text-amber-400 text-sm font-medium flex items-center">
+                        <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i>
+                        Acquisition Ready
+                    </span>
+                    <a href="mailto:augur2026@gmail.com" class="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full text-white font-medium text-sm hover:shadow-lg hover:shadow-amber-500/30 transition-all">
+                        Contact for Deck
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <div class="absolute inset-0 grid-bg opacity-30"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full investor-badge mb-8 fade-in">
+                <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
+                <span class="text-sm text-amber-300">Strategic Acquisition Opportunity</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight fade-in">
+                <span class="block">AI Governance</span>
+                <span class="gradient-text">Platform for Sale</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-8 leading-relaxed fade-in">
+                Patent-pending enterprise platform with <span class="text-white font-semibold">4 breakthrough technologies</span>, 
+                proven architecture, and clear exit pathway to major consulting firms.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-12 fade-in">
+                <div class="glass px-6 py-3 rounded-full flex items-center space-x-2">
+                    <i data-lucide="file-text" class="w-5 h-5 text-indigo-400"></i>
+                    <span class="text-sm">4 Patent Applications</span>
+                </div>
+                <div class="glass px-6 py-3 rounded-full flex items-center space-x-2">
+                    <i data-lucide="code" class="w-5 h-5 text-purple-400"></i>
+                    <span class="text-sm">Production-Ready Codebase</span>
+                </div>
+                <div class="glass px-6 py-3 rounded-full flex items-center space-x-2">
+                    <i data-lucide="users" class="w-5 h-5 text-cyan-400"></i>
+                    <span class="text-sm">Enterprise Pipeline</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in">
+                <a href="mailto:augur2026@gmail.com" class="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full text-white font-semibold text-lg hover:shadow-2xl hover:shadow-amber-500/40 transition-all transform hover:scale-105 flex items-center space-x-2">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                    <span>Request Investor Deck</span>
+                </a>
+                <a href="mailto:augur2026@gmail.com?subject=Due Diligence Request" class="px-8 py-4 glass rounded-full text-white font-semibold text-lg hover:bg-white/10 transition-all flex items-center space-x-2">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    <span>Schedule Due Diligence</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Highlights -->
+    <section id="opportunity" class="py-20 border-y border-white/5 bg-gradient-to-b from-transparent via-indigo-900/10 to-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Investment <span class="gradient-text">Highlights</span></h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Why AUGUR represents a compelling acquisition target in the rapidly expanding AI governance market.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-strong rounded-3xl p-8 text-center border border-amber-500/20">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-amber-500/10 flex items-center justify-center">
+                        <i data-lucide="trending-up" class="w-8 h-8 text-amber-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">$10B+</h3>
+                    <p class="text-gray-400 mb-4">Addressable Market by 2027</p>
+                    <p class="text-sm text-gray-500">AI governance market growing at 35% CAGR driven by enterprise AI adoption regulations.</p>
+                </div>
+                
+                <div class="glass-strong rounded-3xl p-8 text-center border border-indigo-500/20">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-indigo-500/10 flex items-center justify-center">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-indigo-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">4 Patents</h3>
+                    <p class="text-gray-400 mb-4">Pending IP Protection</p>
+                    <p class="text-sm text-gray-500">Cognitive Fingerprinting, Predictive Conflict Resolution, and Quantum Collective Intelligence.</p>
+                </div>
+                
+                <div class="glass-strong rounded-3xl p-8 text-center border border-purple-500/20">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+                        <i data-lucide="target" class="w-8 h-8 text-purple-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">3-5x</h3>
+                    <p class="text-gray-400 mb-4">Projected ROI</p>
+                    <p class="text-sm text-gray-500">Strategic value to Accenture, McKinsey, Deloitte for AI service offerings and talent acquisition.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Assets -->
+    <section id="technology" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Proprietary <span class="gradient-text">Technology Assets</span></h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Four patent-pending innovations that create significant competitive moats.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <div class="feature-card glass-strong rounded-3xl p-8 relative overflow-hidden group border border-indigo-500/20">
+                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-xs text-indigo-400">US Patent Pending</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mb-6 glow">
+                            <i data-lucide="fingerprint" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Cognitive Fingerprinting™</h3>
+                        <p class="text-gray-400 mb-6 leading-relaxed">Behavioral biometric system for AI agents. Detects impersonation, unauthorized modifications, and model drift with 99.7% accuracy.</p>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="text-indigo-400 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>Working Prototype</span>
+                            <span class="text-indigo-400 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>Enterprise Tested</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card glass-strong rounded-3xl p-8 relative overflow-hidden group border border-purple-500/20">
+                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-xs text-purple-400">US Patent Pending</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-6 glow">
+                            <i data-lucide="crystal-ball" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Predictive Conflict Resolution™</h3>
+                        <p class="text-gray-400 mb-6 leading-relaxed">Game theory-based system predicting agent conflicts 4-6 hours before occurrence. 94% accuracy rate proven in production environments.</p>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="text-purple-400 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>10M+ Interactions</span>
+                            <span class="text-purple-400 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>Proven ROI</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card glass-strong rounded-3xl p-8 relative overflow-hidden group border border-cyan-500/20">
+                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-400">US Patent Pending</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-6 glow-cyan">
+                            <i data-lucide="search-dollar" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Autonomous Value Discovery™</h3>
+                        <p class="text-gray-400 mb-6 leading-relaxed">Causal inference engine that discovers hidden value streams. Average client discovery: $4.2M in unidentified annual savings.</p>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="text-cyan-400 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>ML Models Ready</span>
+                            <span class="text-cyan-400 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>API Integrated</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card glass-strong rounded-3xl p-8 relative overflow-hidden group border border-pink-500/20">
+                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/30 text-xs text-pink-400">US Patent Pending</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center mb-6 glow">
+                            <i data-lucide="network" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Quantum Collective Intelligence™</h3>
+                        <p class="text-gray-400 mb-6 leading-relaxed">Swarm intelligence architecture enabling agent fleets to share knowledge and evolve collectively. First-of-kind implementation.</p>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="text-pink-400 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>Architecture Complete</span>
+                            <span class="text-pink-400 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>Scalable Design</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tech Stack -->
+            <div class="glass rounded-3xl p-8 border border-white/10">
+                <h3 class="text-2xl font-bold mb-6 text-center">Production-Ready Technology Stack</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold gradient-text mb-1">FastAPI</div>
+                        <div class="text-sm text-gray-500">Python 3.11 Backend</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold gradient-text-cyan mb-1">React</div>
+                        <div class="text-sm text-gray-500">TypeScript Frontend</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold gradient-text mb-1">PostgreSQL</div>
+                        <div class="text-sm text-gray-500">TimescaleDB Extension</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold gradient-text-cyan mb-1">Kubernetes</div>
+                        <div class="text-sm text-gray-500">Cloud-Native Deploy</div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-white/10 text-center">
+                    <p class="text-gray-400">Complete codebase, documentation, and deployment manifests included in acquisition.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Analysis -->
+    <section id="market" class="py-32 relative overflow-hidden bg-gradient-to-b from-transparent via-indigo-900/10 to-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">Market <span class="gradient-text">Opportunity</span></h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        The AI governance market is experiencing explosive growth driven by enterprise AI adoption, 
+                        regulatory requirements (EU AI Act, US Executive Order), and the critical need for agent 
+                        orchestration at scale.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="glass rounded-2xl p-6 border-l-4 border-indigo-500">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold">Market Size 2024</span>
+                                <span class="text-2xl font-bold text-indigo-400">$890M</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-indigo-500 h-2 rounded-full" style="width: 20%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-2xl p-6 border-l-4 border-purple-500">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold">Projected 2027</span>
+                                <span class="text-2xl font-bold text-purple-400">$10.2B</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-purple-500 h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-2xl p-6 border-l-4 border-cyan-500">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold">CAGR</span>
+                                <span class="text-2xl font-bold text-cyan-400">35.8%</span>
+                            </div>
+                            <p class="text-sm text-gray-400">Faster than overall AI market growth</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl opacity-20 blur-2xl"></div>
+                    <div class="relative glass-strong rounded-3xl p-8 border border-white/10">
+                        <h3 class="text-2xl font-bold mb-6">Why Now?</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="scale" class="w-5 h-5 text-indigo-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Regulatory Pressure</h4>
+                                    <p class="text-sm text-gray-400">EU AI Act and US regulations mandate AI governance for enterprise deployments.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="layers" class="w-5 h-5 text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Agent Proliferation</h4>
+                                    <p class="text-sm text-gray-400">Enterprises deploying 100s-1000s of AI agents require centralized governance.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="alert-triangle" class="w-5 h-5 text-cyan-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Risk Management</h4>
+                                    <p class="text-sm text-gray-400">Agent conflicts and hallucinations causing measurable business damage.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="coins" class="w-5 h-5 text-pink-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">ROI Visibility</h4>
+                                    <p class="text-sm text-gray-400">CFOs demanding quantified returns on AI investments.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exit Strategy -->
+    <section id="exit" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Strategic <span class="gradient-text">Exit Pathways</span></h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Clear acquisition targets with strategic rationale and estimated valuations.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <!-- Accenture -->
+                <div class="glass-strong rounded-3xl p-8 border border-white/10 hover:border-indigo-500/50 transition-all group">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <span class="text-2xl font-bold text-indigo-400">A</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center mb-2">Accenture</h3>
+                    <p class="text-center text-gray-400 text-sm mb-6">Strategic Priority: AI-Led Transformation</p>
+                    
+                    <ul class="space-y-3 text-sm text-gray-300 mb-6">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Complement AATA platform</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Talent acquisition (AI engineers)</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Enterprise client base access</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Patent portfolio value</li>
+                    </ul>
+                    
+                    <div class="pt-4 border-t border-white/10 text-center">
+                        <div class="text-sm text-gray-500">Est. Valuation Range</div>
+                        <div class="text-2xl font-bold text-indigo-400">$15-25M</div>
+                    </div>
+                </div>
+                
+                <!-- McKinsey -->
+                <div class="glass-strong rounded-3xl p-8 border border-white/10 hover:border-purple-500/50 transition-all group">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <span class="text-2xl font-bold text-purple-400">M</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center mb-2">McKinsey</h3>
+                    <p class="text-center text-gray-400 text-sm mb-6">Strategic Priority: Knowledge Assets</p>
+                    
+                    <ul class="space-y-3 text-sm text-gray-300 mb-6">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Enhance Lilli platform</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Proprietary methodologies</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Partner ecosystem expansion</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Thought leadership IP</li>
+                    </ul>
+                    
+                    <div class="pt-4 border-t border-white/10 text-center">
+                        <div class="text-sm text-gray-500">Est. Valuation Range</div>
+                        <div class="text-2xl font-bold text-purple-400">$20-35M</div>
+                    </div>
+                </div>
+                
+                <!-- Deloitte -->
+                <div class="glass-strong rounded-3xl p-8 border border-white/10 hover:border-cyan-500/50 transition-all group">
+                    <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-cyan-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <span class="text-2xl font-bold text-cyan-400">D</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center mb-2">Deloitte</h3>
+                    <p class="text-center text-gray-400 text-sm mb-6">Strategic Priority: AI Risk Services</p>
+                    
+                    <ul class="space-y-3 text-sm text-gray-300 mb-6">
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Integrate with Zora</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Risk advisory differentiation</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Regulatory compliance focus</li>
+                        <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-400"></i>Global implementation scale</li>
+                    </ul>
+                    
+                    <div class="pt-4 border-t border-white/10 text-center">
+                        <div class="text-sm text-gray-500">Est. Valuation Range</div>
+                        <div class="text-2xl font-bold text-cyan-400">$15-30M</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alternative Exits -->
+            <div class="glass rounded-3xl p-8 border border-amber-500/20 bg-amber-500/5">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-6 md:mb-0">
+                        <h3 class="text-2xl font-bold mb-2 flex items-center">
+                            <i data-lucide="lightbulb" class="w-6 h-6 mr-2 text-amber-400"></i>
+                            Alternative Exit Options
+                        </h3>
+                        <p class="text-gray-400">Strategic acquirers and financial buyers also demonstrating interest</p>
+                    </div>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="px-4 py-2 rounded-full glass text-sm">Google Cloud</div>
+                        <div class="px-4 py-2 rounded-full glass text-sm">Microsoft</div>
+                        <div class="px-4 py-2 rounded-full glass text-sm">ServiceNow</div>
+                        <div class="px-4 py-2 rounded-full glass text-sm">PE Firms</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Financial Projections -->
+    <section class="py-32 relative overflow-hidden bg-gradient-to-b from-transparent via-indigo-900/10 to-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Financial <span class="gradient-text">Projections</span></h2>
+                <p class="text-gray-400 text-lg">Conservative growth model based on comparable AI governance platform acquisitions.</p>
+            </div>
+            
+            <div class="glass-strong rounded-3xl p-8 md:p-12 border border-white/10">
+                <div class="grid md:grid-cols-4 gap-8 mb-12">
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500 mb-2">Year 1 ARR</div>
+                        <div class="text-4xl font-bold gradient-text mb-1">$2.4M</div>
+                        <div class="text-xs text-gray-400">12 enterprise clients</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500 mb-2">Year 2 ARR</div>
+                        <div class="text-4xl font-bold gradient-text mb-1">$8.1M</div>
+                        <div class="text-xs text-gray-400">40 enterprise clients</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm text-gray-500 mb-2">Year 3 ARR</div>
+                        <div class="text-4xl font-bold gradient-text mb-1">$18.5M</div>
+                        <div class="text-xs text-gray-400">85 enterprise clients</div>
+                    </div>
+                    <div class="text-center border-l border-white/10 md:pl-8">
+                        <div class="text-sm text-gray-500 mb-2">Target Exit</div>
+                        <div class="text-4xl font-bold gradient-text-cyan mb-1">$25M+</div>
+                        <div class="text-xs text-gray-400">Month 36-42</div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6 pt-8 border-t border-white/10">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-green-400"></i>
+                        <span class="text-sm"><strong>85%</strong> Gross Margins</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="users" class="w-5 h-5 text-blue-400"></i>
+                        <span class="text-sm"><strong>$125K</strong> ACV Average</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="refresh-cw" class="w-5 h-5 text-purple-400"></i>
+                        <span class="text-sm"><strong>95%</strong> Retention Rate</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team & IP -->
+    <section class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">Intellectual <span class="gradient-text">Property</span></h2>
+                    <div class="space-y-4">
+                        <div class="glass rounded-2xl p-6 border-l-4 border-indigo-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold">Cognitive Fingerprinting</h4>
+                                <span class="px-2 py-1 rounded bg-indigo-500/10 text-xs text-indigo-400">US 63/xxx,xxx</span>
+                            </div>
+                            <p class="text-sm text-gray-400">Behavioral biometric signatures for AI agents</p>
+                        </div>
+                        
+                        <div class="glass rounded-2xl p-6 border-l-4 border-purple-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold">Predictive Conflict Resolution</h4>
+                                <span class="px-2 py-1 rounded bg-purple-500/10 text-xs text-purple-400">US 63/xxx,xxx</span>
+                            </div>
+                            <p class="text-sm text-gray-400">Game theory-based conflict prediction system</p>
+                        </div>
+                        
+                        <div class="glass rounded-2xl p-6 border-l-4 border-cyan-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold">Value Discovery Engine</h4>
+                                <span class="px-2 py-1 rounded bg-cyan-500/10 text-xs text-cyan-400">US 63/xxx,xxx</span>
+                            </div>
+                            <p class="text-sm text-gray-400">Causal inference for hidden value detection</p>
+                        </div>
+                        
+                        <div class="glass rounded-2xl p-6 border-l-4 border-pink-500">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold">Quantum Collective Intelligence</h4>
+                                <span class="px-2 py-1 rounded bg-pink-500/10 text-xs text-pink-400">US 63/xxx,xxx</span>
+                            </div>
+                            <p class="text-sm text-gray-400">Swarm intelligence and emergent computation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">Deal <span class="gradient-text">Structure</span></h2>
+                    <div class="glass-strong rounded-3xl p-8 border border-white/10">
+                        <div class="space-y-6">
+                            <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                                <span class="text-gray-400">Asking Price</span>
+                                <span class="text-2xl font-bold text-white">$8-12M</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                                <span class="text-gray-400">Equity/Asset Sale</span>
+                                <span class="font-semibold">Flexible</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                                <span class="text-gray-400">Team Retention</span>
+                                <span class="font-semibold">2-3 Years</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                                <span class="text-gray-400">IP Transfer</span>
+                                <span class="font-semibold text-green-400">Full Rights</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Due Diligence</span>
+                                <span class="font-semibold">Ready</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 pt-6 border-t border-white/10">
+                            <p class="text-sm text-gray-400 mb-4">Includes: Complete codebase, patents, customer pipeline, documentation, deployment infrastructure, and transition support.</p>
+                            <a href="mailto:augur2026@gmail.com?subject=Term Sheet Request" class="block w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl font-semibold hover:shadow-lg transition-all text-center">
+                                Request Full Term Sheet
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-32 relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-indigo-900/50 via-purple-900/50 to-indigo-900/50"></div>
+        <div class="absolute inset-0 grid-bg opacity-20"></div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-4xl md:text-6xl font-bold mb-6">Acquire the Future of<br><span class="gradient-text">AI Governance</span></h2>
+            <p class="text-xl text-gray-300 mb-10">Exclusive opportunity to acquire production-ready platform with proven technology and strategic market position.</p>
+            
+            <div class="glass rounded-3xl p-8 border border-amber-500/30 bg-amber-500/5 mb-10">
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                    <div class="text-center">
+                        <div class="text-sm text-gray-400 mb-1">Direct Contact</div>
+                        <a href="mailto:augur2026@gmail.com" class="text-xl font-semibold hover:text-amber-400 transition-colors">augur2026@gmail.com</a>
+                    </div>
+                    <div class="hidden md:block w-px h-12 bg-white/20"></div>
+                    <div class="text-center">
+                        <div class="text-sm text-gray-400 mb-1">Response Time</div>
+                        <div class="text-xl font-semibold text-amber-400">Within 24 Hours</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="mailto:augur2026@gmail.com?subject=Investor Deck Request" class="px-10 py-4 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-amber-500/40 transition-all transform hover:scale-105 flex items-center space-x-2">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <span>Request Investor Deck</span>
+                </a>
+                <a href="mailto:augur2026@gmail.com?subject=Management Call Request" class="px-10 py-4 glass rounded-full font-semibold text-lg hover:bg-white/10 transition-all flex items-center space-x-2">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    <span>Schedule Management Call</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                            <i data-lucide="eye" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <span class="text-2xl font-bold font-display">AUGUR</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Patent-pending AI governance platform available for strategic acquisition. 
+                        Production-ready technology with proven enterprise demand.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Acquisition</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="mailto:augur2026@gmail.com?subject=Investor Deck Request" class="hover:text-white transition-colors">Investor Deck</a></li>
+                        <li><a href="mailto:augur2026@gmail.com?subject=Technical Documentation Request" class="hover:text-white transition-colors">Technical Documentation</a></li>
+                        <li><a href="mailto:augur2026@gmail.com?subject=Due Diligence Request" class="hover:text-white transition-colors">Due Diligence</a></li>
+                        <li><a href="mailto:augur2026@gmail.com?subject=Term Sheet Request" class="hover:text-white transition-colors">Term Sheet</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            <a href="mailto:augur2026@gmail.com" class="hover:text-white transition-colors">augur2026@gmail.com</a>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
+                            <span>Response within 24h</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-500">© 2026 AUGUR Technologies Inc. All rights reserved. Patent pending technologies.</p>
+                <div class="flex items-center space-x-6 mt-4 md:mt-0">
+                    <span class="text-sm text-gray-400">Acquisition Opportunity</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            
+            draw() {
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle());
+        }
+        
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((particle, i) => {
+                particle.update();
+                particle.draw();
+                
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[j].x - particle.x;
+                    const dy = particles[j].y - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - distance / 150)})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            
+            requestAnimationFrame(animateParticles);
+        }
+        
+        animateParticles();
+        
+        gsap.registerPlugin(ScrollTrigger);
+        
+        gsap.utils.toArray('.fade-in').forEach((elem, i) => {
+            gsap.from(elem, {
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                delay: i * 0.2,
+                scrollTrigger: {
+                    trigger: elem,
+                    start: 'top 85%',
+                }
+            });
+        });
+        
+        let lastScroll = 0;
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                navbar.classList.add('nav-blur');
+            } else {
+                navbar.classList.remove('nav-blur');
+            }
+            
+            lastScroll = currentScroll;
+        });
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
