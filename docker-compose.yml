@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: augur-postgres
+    environment:
+      POSTGRES_DB: augur
+      POSTGRES_USER: augur
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - augur-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U augur"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: augur-timescaledb
+    environment:
+      POSTGRES_DB: augur_ts
+      POSTGRES_USER: augur
+      POSTGRES_PASSWORD: ${TSDB_PASSWORD:-timescale}
+    ports:
+      - "5433:5432"
+    volumes:
+      - timescale_data:/var/lib/postgresql/data
+    networks:
+      - augur-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U augur"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: augur-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - augur-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./backend
+    container_name: augur-api
+    environment:
+      DATABASE_URL: postgresql://augur:${DB_PASSWORD:-postgres}@postgres:5432/augur
+      TIMESCALE_URL: postgresql://augur:${TSDB_PASSWORD:-timescale}@timescaledb:5432/augur_ts
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis}@redis:6379
+      JWT_SECRET: ${JWT_SECRET:-secret}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-key}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      timescaledb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - augur-network
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build: ./frontend
+    container_name: augur-frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - augur-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+networks:
+  augur-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  timescale_data:
+  redis_data:
