@@ -1,0 +1,35 @@
+name: Train ML Model
+
+on:
+  workflow_dispatch:  # Позволяет запускать вручную
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        pip install numpy scikit-learn xgboost
+        cd backend && pip install -r requirements.txt
+    
+    - name: Run training script
+      run: |
+        cd backend/algorithms
+        python train_model.py
+    
+    - name: Commit and push model
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add backend/models/fingerprint_v1.pkl
+        git commit -m "Update trained model [skip ci]" || exit 0
+        git push
