@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AUGUR API Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #0f172a; color: white; }
+        button { padding: 10px; margin: 5px; background: #6366f1; color: white; border: none; border-radius: 5px; }
+        pre { background: #1e293b; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>AUGUR API Test Page</h1>
+    <p>API Base URL: <span id="api-url"></span></p>
+    
+    <button onclick="testStatus()">Test /status</button>
+    <button onclick="testFingerprint()">Test /fingerprint</button>
+    
+    <pre id="result">Click a button to test API</pre>
+
+    <script>
+        const API_URL = 'https://karamik.github.io/AUGUR';
+        
+        document.getElementById('api-url').textContent = API_URL;
+        
+        async function testStatus() {
+            try {
+                const res = await fetch(`${API_URL}/api/v1/fingerprint/status`);
+                const data = await res.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (e) {
+                document.getElementById('result').textContent = 'Error: ' + e.message;
+            }
+        }
+        
+        async function testFingerprint() {
+            try {
+                const res = await fetch(`${API_URL}/api/v1/fingerprint/generate/test-agent`);
+                const data = await res.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (e) {
+                document.getElementById('result').textContent = 'Error: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>
