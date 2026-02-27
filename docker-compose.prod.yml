@@ -1,0 +1,220 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    build: ./backend/services/api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://augur:augur@postgres:5432/augur
+      - REDIS_URL=redis://redis:6379
+      - SERVICE_AGENT=http://agent-service:8001
+      - SERVICE_ORCHESTRATION=http://orchestration-service:8002
+      - SERVICE_MEMORY=http://memory-service:8003
+      - SERVICE_GOVERNANCE=http://governance-service:8004
+      - SERVICE_CONFLICT=http://conflict-resolution-service:8005
+      - SERVICE_VALUE=http://value-discovery-service:8006
+      - SERVICE_QUANTUM=http://quantum-service:8007
+    depends_on:
+      - postgres
+      - redis
+      - agent-service
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Agent Service
+  agent-service:
+    build: ./backend/services/agent-service
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://augur:augur@postgres:5432/augur_agents
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Orchestration Service
+  orchestration-service:
+    build: ./backend/services/orchestration-service
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://augur:augur@postgres:5432/augur_orchestration
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Memory Service
+  memory-service:
+    build: ./backend/services/memory-service
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://augur:augur@postgres:5432/augur_memory
+      - REDIS_URL=redis://redis:6379
+      - NEO4J_URI=bolt://neo4j:7687
+    depends_on:
+      - postgres
+      - redis
+      - neo4j
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Governance Service
+  governance-service:
+    build: ./backend/services/governance-service
+    ports:
+      - "8004:8004"
+    environment:
+      - DATABASE_URL=postgresql://augur:augur@postgres:5432/augur_governance
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Conflict Resolution Service
+  conflict-resolution-service:
+    build: ./backend/services/conflict-resolution-service
+    ports:
+      - "8005:8005"
+    environment:
+      - DATABASE_URL=postgresql://augur:augur@postgres:5432/augur_conflict
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Value Discovery Service
+  value-discovery-service:
+    build: ./backend/services/value-discovery-service
+    ports:
+      - "8006:8006"
+    environment:
+      - DATABASE_URL=postgresql://augur:augur@postgres:5432/augur_value
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Quantum Collective Service
+  quantum-service:
+    build: ./backend/services/quantum-service
+    ports:
+      - "8007:8007"
+    environment:
+      - DATABASE_URL=postgresql://augur:augur@postgres:5432/augur_quantum
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # PostgreSQL
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: augur
+      POSTGRES_PASSWORD: augur
+      POSTGRES_DB: augur
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U augur"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Neo4j
+  neo4j:
+    image: neo4j:latest
+    environment:
+      NEO4J_AUTH: neo4j/password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j-data:/data
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@augur.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api-gateway
+      - agent-service
+    networks:
+      - augur-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+  neo4j-data:
+
+networks:
+  augur-network:
+    driver: bridge
