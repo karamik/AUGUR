@@ -1,0 +1,46 @@
+# AUGUR Enterprise Platform Production Makefile
+# Команды для production-запуска
+
+.PHONY: help build up down logs clean status
+
+help:
+	@echo "📋 AUGUR Production Commands:"
+	@echo ""
+	@echo "  make build-prod    - Собрать все сервисы для production"
+	@echo "  make up-prod       - Запустить production версию"
+	@echo "  make down-prod     - Остановить production версию"
+	@echo "  make logs-prod     - Показать логи production"
+	@echo "  make status        - Статус всех сервисов"
+	@echo "  make clean-prod    - Полная очистка"
+
+build-prod:
+	docker-compose -f docker-compose.prod.yml build
+
+up-prod:
+	docker-compose -f docker-compose.prod.yml up -d
+	@echo ""
+	@echo "🌟 AUGUR ENTERPRISE PLATFORM (PRODUCTION)"
+	@echo "=========================================="
+	@echo "✅ API Gateway:    http://localhost:8000"
+	@echo "✅ Agent Service:  http://localhost:8001"
+	@echo "✅ PostgreSQL:     порт 5432"
+	@echo "✅ Redis:          порт 6379"
+	@echo "✅ pgAdmin:        http://localhost:5050"
+	@echo "=========================================="
+	@echo "📊 Проверка статуса: make status"
+
+down-prod:
+	docker-compose -f docker-compose.prod.yml down
+
+logs-prod:
+	docker-compose -f docker-compose.prod.yml logs -f
+
+status:
+	@echo "📊 Статус сервисов AUGUR:"
+	@echo "========================"
+	@docker-compose -f docker-compose.prod.yml ps
+
+clean-prod:
+	docker-compose -f docker-compose.prod.yml down -v
+	docker system prune -f
+	@echo "✅ Production очищена"
